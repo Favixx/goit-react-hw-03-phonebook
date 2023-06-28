@@ -13,6 +13,19 @@ export class App extends Component {
     filter: ''
   };
 
+  componentDidMount() {
+    const storedContacts = localStorage.getItem("contacts");
+    if (storedContacts) {
+      this.setState({ contacts: JSON.parse(storedContacts) });
+    }
+  }
+
+  componentDidUpdate(prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
+    }
+  }
+
   addContact = (newContact) => {
     const { name, number } = newContact;
     const isExist = this.state.contacts.some(
@@ -33,8 +46,8 @@ export class App extends Component {
     const { contacts, filter } = this.state;
     const filteredContacts = contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
-      );
-      return (
+    );
+    return (
       <div>
         <h1>Phonebook</h1>
         <ContactForm addContact={this.addContact} />
